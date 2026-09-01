@@ -24,6 +24,7 @@ usage :
 	@echo "update - get latest version from github"
 	@echo "build - $(mProduct)"
 	@echo "incPatch, incMinor, or incMajor - before save or publish"
+	@echo "    Update Changelog in readme.txt"
 	@echo "save - ci, push develop to github, copy to $(mPubDev)"
 	@echo "publish - tag, ci, push to develop, merge to main,"
 	@echo "    push to main, copy to $(mPubRel)"
