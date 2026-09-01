@@ -32,14 +32,14 @@ update :
 	git co develop
 	git pull origin develop
 
-build : clean update README.md $(mProduct)
+build : dist-clean update README.md $(mProduct)
 	@echo 'If OK, make save'
 
 save development : check-dev
 	git ci -am Updated
 	git push origin develop
 	-ssh $(mServer) mkdir -p $(mPubDev)
-	rsync -a README.org readme.txt dist/custom-field-shortcode-$$(cat ../VERSION).zip $(mServer):$(mPubDev)
+	rsync -a README.org readme.txt dist/custom-field-shortcode-$$(cat VERSION).zip $(mServer):$(mPubDev)
 	cp VERSION VERSION-dev
 	git ci -am Updated
 	git push origin develop
@@ -54,7 +54,7 @@ publish release : check-rel
 	git push --tags origin main
 	git co develop
 	-ssh $(mServer) mkdir -p $(mPubRel)
-	rsync -a README.org readme.txt dist/custom-field-shortcode-$$(cat ../VERSION).zip $(mServer):$(mPubRel)
+	rsync -a README.org readme.txt dist/custom-field-shortcode-$$(cat VERSION).zip $(mServer):$(mPubRel)
 	cp VERSION VERSION-rel
 	git ci -am Updated
 	git push origin develop
