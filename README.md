@@ -1,68 +1,61 @@
-custom-field-shortcode
-======================
+# custom-field-shortcode
 
-Contributors: Bruce Rafnel
+![version](https://img.shields.io/badge/version-1.3.1-orange.svg)
 
-Tags: plugin, shortcode, custom-fields
+![WordPress](https://img.shields.io/badge/WordPress-Compatible-blue.svg)
 
-Requires at least: 6.0
+Using shortcodes, place custom fields anywhere in your post content.
 
-Tested up to: 6.8.2
+## Installation
 
-Stable tag: vVERSION
+Location:
+<https://moria.whyayh.com/rel/released/software/own/plugin-custom-field-shortcode/>
 
-License: GPLv2 or later
+1.  Use Add Plugins, upload Plugin custom-field-shortcode-1.3.1.zip
+2.  Install and activate the plugin
 
-License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
+## How do I use this plugin?
 
-Description
------------
+In your post\'s content, look for the custom fields and the bottom of
+the post. You can short code with the custom field\'s name. That will be
+replaced with the value of the custom field. For example:
 
-Place custom fields anywhere in your post content.
+> \[custom~field~ field=\"your-custom-field-name\"\]
 
-Installation
-------------
-
-1. Get the custom-field-shortcode.zip file from
-   https://moria.whyayh.com/rel/released/software/own/plugin-custom-field-shortcode/
-2. Use Add Plugins, Upload Plugin, custom-field-shortcode.zip
-3. Activate the plugin
-
-How do I use this plugin?
--------------------------
-
-In your post's content add shortcode "custom_field." In the
-shortcode's field add:
-
-> [custom_field field="your-custom-field-name"]
-
-Replace "your-custom-field-name" with one of the custom field name
+Replace \"your-custom-field-name\" with one of the custom field name
 that are available to the post. To see the custom fields that are
-available, select the "..." menu option Preferences, section General,
-Advanced, turn on "Custom fields"
+available, select the \"...\" menu option Preferences, section General,
+Advanced, turn on \"Custom fields\"
 
-HTML can be put around the [] text and multiple [] fields can be
+HTML can be put around the \[\] text and multiple \[\] fields can be
 added. For example:
 
-> <p>[custom~field field="usp-custom-subtitle"]</p>
+> ```{=html}
+> <p>
+> ```
+> \[custom\~field field=\"usp-custom-subtitle\"\]
 >
-> <p>by [custom_field field="usp-custom-author"]</p>
+> ```{=html}
+> </p>
+> ```
+> ```{=html}
+> <p>
+> ```
+> by \[custom~field~ field=\"usp-custom-author\"\]
 >
-> <p>Link: [custom_field field="usp-custom-link"]>
-> [custom_field field="usp-custom-link"]</p>
+> ```{=html}
+> </p>
+> ```
+> ```{=html}
+> <p>
+> ```
+> Link: \[custom~field~ field=\"usp-custom-link\"\]\> \[custom~field~
+> field=\"usp-custom-link\"\]
+>
+> ```{=html}
+> </p>
+> ```
 
-How to uninstall the plugin?
-----------------------------
+## How to uninstall the plugin?
 
 Simply deactivate and delete the plugin.
-
-Changelog
----------
-
-### 1.3.1
-
-- Changed the version numbering
-
-### 1.0
-
-- First version

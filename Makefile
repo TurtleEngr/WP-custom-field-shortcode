@@ -1,21 +1,18 @@
-# Makefile for github.com:TurtleEngr/plugin-custom-field-shortcode
+# Makefile for github.com:TurtleEngr/WP-custom-field-shortcode
 
-# Typical workflow
-# make update - get latest version from github
-# make build - incPatch, $(mProduct), check
-# make save - update, incMinor, build, ci, push develop to github,
-#             copy to PubDev
-# make publish - incMajor, save, tag, ci, push to develop, merge to
-#                main, push to main, copy to PubRel
+# ----------
+# Macros
 
-mProj = plugin-custom-field-shortcode
-mProduct = dist/custom-field-shortcode.zip
+SHELL := /bin/bash
+
+mProj = WP-custom-field-shortcode
+mProduct = dist/custom-field-shortcode-VERSION.zip
 
 mBuildList = \
-    VERSION \
     dist/custom-field-shortcode \
+    dist/custom-field-shortcode/custom-field-shortcode.php \
     dist/custom-field-shortcode/readme.txt \
-    dist/custom-field-shortcode/custom-field-shortcode.php
+    dist/custom-field-shortcode/LICENSE
 
 mServer = moria.whyayh.com
 mPubDev = /rel/development/software/own/$(mProj)
@@ -23,19 +20,33 @@ mPubRel = /rel/released/software/own/$(mProj)
 
 # --------------------
 
-build : clean
-	$(MAKE) $(mProduct)
+usage :
+	@echo "update - get latest version from github"
+	@echo "build - $(mProduct)"
+	@echo "incPatch, incMinor, or incMajor - before save or publish"
+	@echo "save - ci, push develop to github, copy to $(mPubDev)"
+	@echo "publish - tag, ci, push to develop, merge to main,"
+	@echo "    push to main, copy to $(mPubRel)"
+
+update :
+	git co develop
+	git pull origin develop
+
+build : clean update README.md $(mProduct)
 	@echo 'If OK, make save'
 
-save : update incPatch build
+save development : check-dev
 	git ci -am Updated
 	git push origin develop
 	-ssh $(mServer) mkdir -p $(mPubDev)
 	rsync -a $(mProduct) $(mServer):$(mPubDev)
+	cp VERSION VERSION-dev
+	git ci -am Updated
+	git push origin develop
 	@echo 'If OK, make publish'
 
-publish release : incMinor save 
-	git tag -f -F VERSION "v$$(cat VERSION)"
+publish release : check-rel
+	git tag -f "ver-$$(cat VERSION)"
 	git push --tags origin develop
 	git co main
 	git pull --tags origin main
@@ -44,11 +55,10 @@ publish release : incMinor save
 	git co develop
 	-ssh $(mServer) mkdir -p $(mPubRel)
 	rsync -a $(mProduct) $(mServer):$(mPubRel)
+	cp VERSION VERSION-rel
+	git ci -am Updated
+	git push origin develop
 	@echo 'If done, make dist-clean'
-
-update :
-	git co develop
-	git pull --tags origin develop
 
 clean :
 	-find . -type f -name '*~' -exec rm {} \;
@@ -62,6 +72,38 @@ dist-clean : clean
 # git push origin --delete v2.1.1
 
 # --------------------
+# Work Targets
+
+$(mProduct) : $(mBuildList)
+	php -l custom-field-shortcode.php
+	cd dist; zip -r custom-field-shortcode-$$(cat ../VERSION).zip custom-field-shortcode
+	-touch $@
+
+README.md : README.org VERSION
+	pandoc -f org -t markdown <README.org >$@
+	sed -i "s/VERSION/$$(cat VERSION)/" $@
+	sed -i 's/^\[version]/![version]/' $@
+	sed -i 's/^\[WordPress]/![WordPress]/' $@
+
+check-dev :
+	if ! diff -q VERSION VERSION-dev; then \
+		echo "Development versions must be different."; \
+		echo "increment and rebuild."; \
+		exit 1; \
+	fi
+
+check-rel :
+	if ! diff -q VERSION VERSION-rel; then \
+		echo "Released versions must be different."; \
+		echo "increment and rebuild."; \
+		exit 1; \
+	fi
+
+# --------------------
+# Single Targets
+
+VERSION :
+	echo '0.0.0' >$@
 
 incPatch : VERSION
 	incver.sh -p
@@ -72,23 +114,14 @@ incMinor : VERSION
 incMajor : VERSION
 	incver.sh -M
 
-$(mProduct) : $(mBuildList)
-	-rm $@
-	cd dist; zip -r custom-field-shortcode.zip custom-field-shortcode
-
-# mBuildList
-
-VERSION :
-	echo '0.0.0' >$@
-
 dist/custom-field-shortcode :
 	mkdir -p $@
 
-dist/custom-field-shortcode/readme.txt : VERSION custom-field-shortcode/readme.txt
-	-cp custom-field-shortcode/readme.txt $@
+dist/custom-field-shortcode/custom-field-shortcode.php : VERSION custom-field-shortcode.php
+	sed "s/VERSION/$$(cat VERSION)/" <custom-field-shortcode.php >$@
 
-dist/custom-field-shortcode/custom-field-shortcode.php : VERSION custom-field-shortcode/custom-field-shortcode.php
-	sed "s/VERSION/$$(cat VERSION)/" <custom-field-shortcode/custom-field-shortcode.php >$@
+dist/custom-field-shortcode/readme.txt : VERSION readme.txt
+	sed "s/VERSION/$$(cat VERSION)/" <$? >$@
 
-custom-field-shortcode/readme.txt : VERSION README.md
-	sed "s/VERSION/$$(cat VERSION)/" <README.md >$@
+dist/custom-field-shortcode/LICENSE : LICENSE
+	-cp $? $@
