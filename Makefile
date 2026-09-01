@@ -39,7 +39,7 @@ save development : check-dev
 	git ci -am Updated
 	git push origin develop
 	-ssh $(mServer) mkdir -p $(mPubDev)
-	rsync -a $(mProduct) $(mServer):$(mPubDev)
+	rsync -a README.org readme.txt dist/custom-field-shortcode-$$(cat ../VERSION).zip $(mServer):$(mPubDev)
 	cp VERSION VERSION-dev
 	git ci -am Updated
 	git push origin develop
@@ -54,7 +54,7 @@ publish release : check-rel
 	git push --tags origin main
 	git co develop
 	-ssh $(mServer) mkdir -p $(mPubRel)
-	rsync -a $(mProduct) $(mServer):$(mPubRel)
+	rsync -a README.org readme.txt dist/custom-field-shortcode-$$(cat ../VERSION).zip $(mServer):$(mPubRel)
 	cp VERSION VERSION-rel
 	git ci -am Updated
 	git push origin develop
