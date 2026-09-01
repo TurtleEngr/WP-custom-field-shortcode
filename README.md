@@ -1,6 +1,6 @@
 # custom-field-shortcode
 
-![version](https://img.shields.io/badge/version-1.3.2-orange.svg)
+![version](https://img.shields.io/badge/version-1.3.3-orange.svg)
 
 ![WordPress](https://img.shields.io/badge/WordPress-Compatible-blue.svg)
 
@@ -11,7 +11,7 @@ Using shortcodes, place custom fields anywhere in your post content.
 Location:
 <https://moria.whyayh.com/rel/released/software/own/plugin-custom-field-shortcode/>
 
-1.  Use Add Plugins, upload Plugin custom-field-shortcode-1.3.2.zip
+1.  Use Add Plugins, upload Plugin custom-field-shortcode-1.3.3.zip
 2.  Install and activate the plugin
 
 ## How do I use this plugin?
